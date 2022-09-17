@@ -12,12 +12,21 @@ class Genre(models.Model):
         return self.name
 
 
+class Language(models.Model):
+    name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
+
+
 class Book(models.Model):
     title = models.CharField(max_length=200)
-    author = models.ForeignKey('Author', on_delete=models.SET_NULL)
+    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
     summary = models.TextField(max_length=600)
     isbn = models.CharField('ISBN', max_length=13, unique=True)
     genre = models.ManyToManyField(Genre)
+    language = models.ForeignKey(
+        'Language', on_delete=models.RESTRICT, null=True)
 
     def __str__(self):
         return self.title
@@ -41,4 +50,24 @@ class Author(models.Model):
         return f"{self.last_name} {self.first_name}"
 
 
-class BookInstance(models.Model)
+class BookInstance(models.Model):
+    id = models.UUIDField
+    book = models.ForeignKey('Book', on_delete=models.RESTRICT, null=True)
+    imprint = models.CharField(max_length=200)
+    due_back = models.DateField(null=True, blank=True)
+
+    LOAN_STATUS = (
+        ('m', 'Maintaince'),
+        ('o', 'On loan'),
+        ('a', 'Available'),
+        ('r', 'Reserved')
+    )
+
+    status = models.CharField(
+        max_length=1, choices=LOAN_STATUS, blank=True, default='m')
+
+    class Meta:
+        ordering = ['due_back']
+
+    def __str__(self):
+        return f"{self.id} ({self.book.title})"
