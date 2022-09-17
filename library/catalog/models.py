@@ -31,7 +31,7 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
-    def get_deferred_fields(self):
+    def get_absolute_url(self):
         return reverse('book_detail', kwargs={"pk": self.pk})
 
 
@@ -43,7 +43,7 @@ class Author(models.Model):
     class Meta:
         ordering = ['last_name', 'first_name']
 
-    def get_deferred_fields(self):
+    def get_absolute_url(self):
         return reverse('auther_detail', kwargs={"pk": self.pk})
 
     def __str__(self):

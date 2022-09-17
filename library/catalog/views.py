@@ -7,12 +7,12 @@ from django.views.generic import CreateView, DetailView
 
 def index(request):
 
-    num_book = Book.objects.all().count()
+    num_books = Book.objects.all().count()
     num_instances = BookInstance.objects.all().count()
     num_insatnces_available = BookInstance.objects.filter(
         status__exact='a').count()
     context = {
-        'numb_book': num_book,
+        'numb_books': num_books,
         'num_instances': num_instances,
         'num_insatnces_available': num_insatnces_available
     }
